@@ -3,13 +3,13 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router/index';
-// import VueRouter from 'vue-router';
-import goods from './components/goods/goods';
-// Vue.use(VueRouter);
+import VueResource from 'vue-resource';
 
 import './stylus/index.styl';
 
 Vue.config.productionTip = false;
+
+Vue.use(VueResource);
 
 /* eslint-disable no-new */
 new Vue({
@@ -20,15 +20,3 @@ new Vue({
   linkActiveClass: 'active'
 });
 
-//vue1.0 的用法
-// let app = Vue.extend(App);
-//
-// let router = new VueRouter();
-//
-// router.map({
-//   '/goods':{
-//     component: goods
-//   }
-// });
-//
-// router.start(app, '#app');
