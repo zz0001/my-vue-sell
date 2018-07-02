@@ -20,7 +20,7 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({sourceMap: config.dev.cssSourceMap, usePostCSS: true})
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
@@ -28,19 +28,19 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   // these devServer options should be customized in /config/index.js
   devServer: {
     before(app) {
-      app.get('/api/seller', function(req, res) {
+      app.get('/api/seller', function (req, res) {
         res.json({
           errno: 0,
           data: seller
         })
       });
-      app.get('/api/goods', function(req, res) {
+      app.get('/api/goods', function (req, res) {
         res.json({
           errno: 0,
           data: goods
         })
       });
-      app.get('/api/ratings', function(req, res) {
+      app.get('/api/ratings', function (req, res) {
         res.json({
           errno: 0,
           data: ratings
@@ -50,7 +50,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+        {from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html')},
       ],
     },
     hot: true,
@@ -60,7 +60,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
     overlay: config.dev.errorOverlay
-      ? { warnings: false, errors: true }
+      ? {warnings: false, errors: true}
       : false,
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
@@ -93,6 +93,52 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
+//这里是json-server配置信息
+// json-server.js
+const jsonServer = require('json-server');
+const apiServer = jsonServer.create();
+const apiRouter = jsonServer.router('static/data.json'); //数据关联server，db.json与index.html同级
+const middlewares = jsonServer.defaults();
+
+apiServer.use(middlewares)
+apiServer.use('/api',apiRouter)
+apiServer.listen(3000, () => {                 //监听端口
+  console.log('JSON Server is running')
+})
+
+//express 配置server
+// var apiServer = express();
+// var bodyParser = require('body-parser');
+// apiServer.use(bodyParser.urlencoded({extended: true}));
+// apiServer.use(bodyParser.json());
+// var apiRouter = express.Router();
+// var fs = require('fs');
+// apiRouter.route('/:apiName') //接口路径
+//   .all(function (req, res) {
+//     fs.readFile('./data.json', 'utf8', function (err, data) {  //读取接口文件
+//       if (err) throw err;
+//       var data = JSON.parse(data);
+//       if (data[req.params.apiName]) {
+//         res.json(data[req.params.apiName])
+//       }
+//       else {
+//         res.send('no such api name')
+//       }
+//
+//     })
+//   });
+//
+//
+// apiServer.use('/api', apiRouter);
+// apiServer.listen(3000, function (err) {
+//   if (err) {
+//     console.log(err)
+//     return
+//   }
+//   console.log('Listening at http://localhost:' + 3000 + '\n')
+// })
+
+
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
   portfinder.getPort((err, port) => {
@@ -110,8 +156,8 @@ module.exports = new Promise((resolve, reject) => {
           messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
+          ? utils.createNotifierCallback()
+          : undefined
       }))
 
       resolve(devWebpackConfig)

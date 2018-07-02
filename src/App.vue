@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
 
     <div class="tab border-1px">
       <div class="tab-item">
@@ -30,18 +30,29 @@
     data() {
       return {
         seller: {}
-      }
+      };
     },
     created() {
-      this.$http.get('/apo/seller').then((response) => {
-        response = response.json();
-        if (response.errno === ERR_OK) {
-          this.seller = response.data;
-          console.log(this.seller);
-        } else {
-
-        }
-      })
+      // this.$ajax({
+      //   url: '/api/seller',//api 代理到json文件地址，后面的后缀是文件中的对象或者是数组
+      //   method: 'get',//请求方式
+      //   //这里可以添加axios文档中的各种配置
+      // }).then(function (res) {
+      //   console.log("response body: \n", res.data.data);
+      //   console.log("response avatar: \n", res.data.data.avatar);
+      //   this.seller = res.data.data;
+      //   console.log("avatar: " + this.seller.avatar)
+      // }).catch(function (err) {
+      //   console.log(err, '错误');
+      // })
+      this.$ajax.get('api/seller').then((res) => {
+        console.log("response body: \n", res.data.data);
+        console.log("response avatar: \n", res.data.data.avatar);
+        this.seller = res.data.data;
+        console.log("avatar: " + this.seller.avatar)
+      },(err)=>{
+        console.log(err,'请求失败');
+      });
     },
     components: {
       "v-header": header
@@ -51,14 +62,14 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "./stylus/mixin.styl"
+  @import "common/stylus/mixin.styl"
   #app
     .tab
       display: flex
       width: 100%
       height: 40px
       line-height: 40px
-      border-1px(rgba(7,17,27,0.1))
+      border-1px(rgba(7, 17, 27, 0.1))
       .tab-item
         flex: 1
         text-align: center
