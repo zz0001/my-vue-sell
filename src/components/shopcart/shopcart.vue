@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{'highlight' : totalCount>0}">
@@ -17,11 +17,36 @@
         </div>
       </div>
     </div>
+
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listshow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="food" v-for="food in selectFoods">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>￥{{food.price * food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import cartcontrol from "../cartcontrol/cartcontrol";
+
   export default {
+    components: {cartcontrol},
     props: {
       selectFoods: {
         type: Array,
@@ -70,12 +95,35 @@
         } else {
           return 'enough';
         }
+      },
+      listshow() {
+        if (!this.totalCount) {
+          this.fold = true;
+          return false;
+        }
+        let show = !this.fold;
+        return show;
+      }
+    },
+    data() {
+      return {
+        fold: true
+      }
+    },
+    methods: {
+      toggleList() {
+        if (!this.totalCount) {
+          return;
+        }
+        this.fold = !this.fold;
       }
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin.styl"
+
   .shopcart
     position fixed
     left 0
@@ -165,4 +213,34 @@
           &.enough
             background: #00b43c
             color: #fff
+    .shopcart-list
+      position absolute
+      top 0
+      left 0
+      z-index -1
+      width 100%
+      transform: translate3d(0, -100%, 0)
+      &.fold-enter-active, &.fold-leave-active
+        transition: all 0.3s
+      &.fold-enter, &.fold-leave-active
+        transform: translate3d(0, 0, 0)
+      .list-header
+        height 40px
+        line-height 40px
+        padding 0 10px
+        background #f3f5f7
+        border-bottom 1px solid rgba(7, 17, 27, 0.1)
+        .title
+          float left
+          font-size 14px
+          color rgb(7, 17, 27)
+        .empty
+          float right
+          font-size 12px
+          color rgb(0, 160, 220)
+      .list-content
+        padding 0 18px
+        max-height 217px
+        background #fff
+        overflow hidden
 </style>
