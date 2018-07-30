@@ -47,7 +47,7 @@
                 :min-price="seller.minPrice"></shopcart>
     </div>
 
-    <food :food="selectedFood"></food>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -165,7 +165,8 @@
         if (!event._constructed) {
           return;
         }
-        this.selectFood = food;
+        this.selectedFood = food;
+        this.$refs.food.show();
       }
     },
     components: {

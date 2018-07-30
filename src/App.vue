@@ -35,9 +35,7 @@
     created() {
       this.$ajax.get('api/seller').then((res) => {  //请求方式  //api 代理到json文件地址，后面的后缀是文件中的对象或者是数组
         console.log("response body: \n", res.data.data);
-        console.log("response avatar: \n", res.data.data.avatar);
         this.seller = res.data.data;
-        console.log("avatar: " + this.seller.avatar)
       },(err)=>{
         console.log(err,'请求失败');
       });
